@@ -8,10 +8,14 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/item_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="4dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:clickable="true"
+        >
 
         <ImageView
             android:id="@+id/cover_image"
@@ -20,10 +24,9 @@
             android:layout_marginHorizontal="10dp"
             android:scaleType="centerCrop" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/film_name"
@@ -32,11 +35,35 @@
                 android:text="FileName"
                 android:textStyle="bold" />
 
-        </LinearLayout>
+            <ProgressBar
+                android:id="@+id/working_bar"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="12dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:padding="0dp"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:id="@+id/backup_button"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="12dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/data_backup" />
+
+        </RelativeLayout>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chapter_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp" />
 </LinearLayout>

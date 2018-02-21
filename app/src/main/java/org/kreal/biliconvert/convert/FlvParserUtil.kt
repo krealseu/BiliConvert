@@ -1,13 +1,8 @@
 package org.kreal.bilitransform
 
-import android.util.Log
 import org.kreal.FLVParser.FLV
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import java.nio.ByteBuffer
-import java.nio.channels.FileChannel
 
 /**
  * Created by lthee on 2017/12/16.

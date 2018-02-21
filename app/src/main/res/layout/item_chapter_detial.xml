@@ -2,13 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:padding="2dp">
 
     <TextView
         android:id="@+id/chapter_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:paddingVertical="3dp"
-        android:text="Wodeshijie" />
+        android:layout_weight="1"
+        android:paddingVertical="3dp" />
+
+    <ProgressBar
+        android:id="@+id/working_bar"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_weight="0"
+        android:scaleType="fitCenter" />
+
+    <ImageButton
+        android:id="@+id/backup_button"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_weight="0"
+        android:background="?selectableItemBackgroundBorderless"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/data_un_backup" />
 </LinearLayout>

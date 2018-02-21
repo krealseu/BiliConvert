@@ -1,4 +1,4 @@
-package org.kreal.biliconvert
+package org.kreal.biliconvert.data
 
 import java.io.File
 
@@ -7,16 +7,19 @@ import java.io.File
  */
 class BiliSource(val file: File) {
     private val films: ArrayList<Film> = arrayListOf()
-    var size: Int = 0
+
+    var filmSize: Int = 0
         private set
 
-    fun getIndex(index: Int) = films[index]
+    fun getFilm(index: Int) = films[index]
+
+    fun getChapter(i: Int, j: Int) = films[i].chapters[j]
 
     init {
         if (file.isDirectory)
             file.listFiles().forEach {
                 films.add(Film(it))
             }
-        size = films.size
+        filmSize = films.size
     }
 }
