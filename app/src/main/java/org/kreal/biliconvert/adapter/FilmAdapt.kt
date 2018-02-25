@@ -3,6 +3,7 @@ package org.kreal.biliconvert.adapter
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,18 +20,19 @@ class FilmAdapt(private val dataManager: DataManager, var listener: OnItemClickL
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemView {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_view, parent, false)
-        val itemView = ItemView(view, dataManager, listener)
+        val itemView = ItemView(view, dataManager)
         itemView.backupButton.setOnClickListener {
             val position = itemView.adapterPosition
-            when (dataManager.getState(dataManager.getFilm(position))) {
+            val film = dataManager.getFilm(position)
+            when (dataManager.getState(film)) {
                 DataManager.State.Backup -> Toast.makeText(it.context, R.string.backup, Toast.LENGTH_SHORT).show()
                 DataManager.State.Completed -> {
-                    listener?.onClick(position, 0)
+                    listener?.onClick(position, film)
                     notifyItemChanged(position)
                 }
                 DataManager.State.NotComplete -> Toast.makeText(it.context, R.string.downloading, Toast.LENGTH_SHORT).show()
                 DataManager.State.Waiting -> {
-                    listener?.onClick(position, 0)
+                    listener?.onClick(position, film)
                     notifyItemChanged(position)
                 }
                 DataManager.State.Converting -> Toast.makeText(it.context, R.string.downloading, Toast.LENGTH_SHORT).show()
@@ -46,6 +48,7 @@ class FilmAdapt(private val dataManager: DataManager, var listener: OnItemClickL
             if (!film.isSingle) {
                 filmName.text = film.name
                 chapterList.visibility = View.VISIBLE
+                adapt.listener = listener
                 adapt.swipeData(film)
                 backupButton.visibility = View.INVISIBLE
                 workingBar.visibility = View.INVISIBLE
@@ -77,13 +80,13 @@ class FilmAdapt(private val dataManager: DataManager, var listener: OnItemClickL
         }
     }
 
-    class ItemView(itemView: View, dataManager: DataManager, listener: OnItemClickListen?) : RecyclerView.ViewHolder(itemView) {
+    class ItemView(itemView: View, dataManager: DataManager) : RecyclerView.ViewHolder(itemView) {
         val coverImage: ImageView = itemView.findViewById(R.id.cover_image)
         val filmName: TextView = itemView.findViewById(R.id.film_name)
         val chapterList: RecyclerView = itemView.findViewById(R.id.chapter_list)
         val backupButton: ImageButton = itemView.findViewById(R.id.backup_button)
         val header: LinearLayout = itemView.findViewById(R.id.item_header)
-        val adapt: DetailAdapt = DetailAdapt(dataManager, listener)
+        val adapt: DetailAdapt = DetailAdapt(dataManager)
         val workingBar: ProgressBar = itemView.findViewById(R.id.working_bar)
 
         init {
@@ -92,4 +95,5 @@ class FilmAdapt(private val dataManager: DataManager, var listener: OnItemClickL
             chapterList.adapter = adapt
         }
     }
+
 }

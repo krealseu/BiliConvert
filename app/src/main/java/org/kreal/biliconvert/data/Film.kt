@@ -9,7 +9,6 @@ import java.util.*
  * Created by lthee on 2018/1/13.
  */
 class Film(val file: File, val parent: Film?) {
-    val chapters: ArrayList<Chapter> = arrayListOf()
 
     val title: String
 
@@ -44,14 +43,14 @@ class Film(val file: File, val parent: Film?) {
                 isSingle = true
                 val info: BiliFilmInfo = Gson().fromJson(jsonFile.readText(), BiliFilmInfo::class.java)
                 val dataFileName: String = info.type_tag
-                val dataFile = File(file, (dataFileName?: ""))
+                val dataFile = File(file, (dataFileName ?: ""))
                 data = if (dataFile.isDirectory) {
                     val result = dataFile.listFiles { file ->
                         file.name.endsWith(".blv")
                     }
-                    Arrays.sort(result, Comparator { f1, f2 ->
+                    Arrays.sort(result) { f1, f2 ->
                         (f1.name.split("."))[0].toInt() - (f2.name.split("."))[0].toInt()
-                    })
+                    }
                     result
                 } else arrayOf()
                 format = when (dataFileName == null) {
@@ -112,11 +111,4 @@ class Film(val file: File, val parent: Film?) {
         }
     }
 
-    fun hasChapter(): Boolean {
-        if (chapters.isEmpty())
-            return false
-        else if (chapters[0].indexTitle == "P1")
-            return false
-        return true
-    }
 }

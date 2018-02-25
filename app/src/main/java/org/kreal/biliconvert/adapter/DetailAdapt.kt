@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import org.kreal.biliconvert.R
 import org.kreal.biliconvert.data.DataManager
 import org.kreal.biliconvert.data.Film
@@ -14,7 +15,7 @@ import org.kreal.biliconvert.data.Film
 /**
  * Created by lthee on 2018/1/13.
  */
-class DetailAdapt(val dataManager: DataManager,var listener: OnItemClickListen? = null) : RecyclerView.Adapter<DetailAdapt.ItemView>() {
+class DetailAdapt(val dataManager: DataManager, var listener: OnItemClickListen? = null) : RecyclerView.Adapter<DetailAdapt.ItemView>() {
     private var filmIndex: Int = 0
     private var film: Film? = null
 
@@ -30,19 +31,20 @@ class DetailAdapt(val dataManager: DataManager,var listener: OnItemClickListen? 
         val itemView = ItemView(view)
         itemView.backupButton.setOnClickListener {
             val position = itemView.adapterPosition
-//            when (dataManager.getState(filmIndex, position)) {
-//                DataManager.State.Backup -> Toast.makeText(it.context, R.string.backup, Toast.LENGTH_SHORT).show()
-//                DataManager.State.Completed -> {
-//                    listener?.onClick(filmIndex, position)
-//                    notifyItemChanged(position)
-//                }
-//                DataManager.State.NotComplete -> Toast.makeText(it.context, R.string.downloading, Toast.LENGTH_SHORT).show()
-//                DataManager.State.Waiting -> {
-//                    listener?.onClick(filmIndex, position)
-//                    notifyItemChanged(position)
-//                }
-//                DataManager.State.Converting -> Toast.makeText(it.context, R.string.downloading, Toast.LENGTH_SHORT).show()
-//            }
+            val film = film?.films?.get(position) ?: return@setOnClickListener
+            when (dataManager.getState(film)) {
+                DataManager.State.Backup -> Toast.makeText(it.context, R.string.backup, Toast.LENGTH_SHORT).show()
+                DataManager.State.Completed -> {
+                    listener?.onClick(filmIndex, film)
+                    notifyItemChanged(position)
+                }
+                DataManager.State.NotComplete -> Toast.makeText(it.context, R.string.downloading, Toast.LENGTH_SHORT).show()
+                DataManager.State.Waiting -> {
+                    listener?.onClick(filmIndex, film)
+                    notifyItemChanged(position)
+                }
+                DataManager.State.Converting -> Toast.makeText(it.context, R.string.downloading, Toast.LENGTH_SHORT).show()
+            }
         }
         return itemView
     }
