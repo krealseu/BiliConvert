@@ -1,17 +1,16 @@
-package org.kreal.bilitransform
+package org.kreal.biliconvert.convert
 
-import android.util.Log
 import com.googlecode.mp4parser.authoring.Movie
 import com.googlecode.mp4parser.authoring.Track
 import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder
 import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack
-import java.io.File
 import java.io.RandomAccessFile
 import java.util.*
 
 /**
  * Created by lthee on 2017/12/16.
+ * merger mp4 video
  */
 object Mp4ParserUtil {
     fun mergerMp4(mp4PathList: Array<String>,outputfile:String) {

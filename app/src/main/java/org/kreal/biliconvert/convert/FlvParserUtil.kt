@@ -1,4 +1,4 @@
-package org.kreal.bilitransform
+package org.kreal.biliconvert.convert
 
 import org.kreal.FLVParser.FLV
 import java.io.RandomAccessFile
@@ -6,6 +6,7 @@ import java.nio.ByteBuffer
 
 /**
  * Created by lthee on 2017/12/16.
+ * merger FLV video
  */
 object FlvParserUtil {
     fun mergerFLV(flvPathList: Array<String>, outputfile: String) {
@@ -27,7 +28,7 @@ object FlvParserUtil {
                 fileChannel.write(flv.flvHeader.data)
                 fileChannel.write(ByteBuffer.wrap(byteArrayOf(0x00, 0x00, 0x00, 0x00)))
                 flv.forEach {
-                    if (it.header.type.toInt() == 0x12 ) {
+                    if (it.header.type.toInt() == 0x12) {
                         fileChannel.write(it.header.data)
                         val tagData = it.getdate()
                         val pos = findDuration(tagData, 0)
@@ -36,7 +37,7 @@ object FlvParserUtil {
                         }
                         tagData.position(0)
                         fileChannel.write(tagData)
-                        fileChannel.write(ByteBuffer.allocate(4).putInt(it.header.dataSize + 11))
+                        fileChannel.write(ByteBuffer.allocate(4).putInt(it.header.dataSize + 11).flip() as ByteBuffer)
                     } else
                         it.writeTo(fileChannel)
                 }
@@ -60,7 +61,7 @@ object FlvParserUtil {
 
     private fun getDuration(flv: FLV): Double {
         for (tag in flv) {
-            if (tag.header.type.toInt() == 0x12 ) {
+            if (tag.header.type.toInt() == 0x12) {
                 val data = tag.getdate()
                 val pos = findDuration(data, 0)
                 return if (pos == -1) {
