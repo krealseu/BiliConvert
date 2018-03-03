@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Bili Download Folder">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="DefaultFolder"
+            android:summary="/storage/emulated/0/android/data"
+            android:title="Default" />
+        <Preference
+            android:key="CustomFolder"
+            android:summary="/storage/emulated/0/android/data"
+            android:title="Customize" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Output Folder">
+        <Preference
+            android:key="OutputFolder"
+            android:summary="/storage/emulated/0/download"
+            android:title="Output" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="About">
+        <Preference
+            android:summary="lthee12@hotmail.com"
+            android:title="Email"/>
+        <Preference
+            android:summary="https://github.com/krealseu/BiliConvert"
+            android:title="Source code">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/krealseu/BiliConvert" />
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

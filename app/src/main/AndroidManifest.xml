@@ -20,6 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".setting.SettingsActivity"
+            android:label="Settings"
+            android:theme="@style/DIY.SlideClose.Transparent.Theme"></activity>
     </application>
 
 </manifest>
