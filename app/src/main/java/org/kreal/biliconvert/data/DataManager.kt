@@ -37,7 +37,6 @@ class DataManager(biliSourceFolder: File, val outputFolder: File, private val co
     init {
         if (biliSourceFolder.isDirectory)
             biliSourceFolder.listFiles().forEach {
-                Log.i("ss",it.path)
                 if (it.isDirectory) {
                     val film = Film(it)
                     if (film.isValid)
