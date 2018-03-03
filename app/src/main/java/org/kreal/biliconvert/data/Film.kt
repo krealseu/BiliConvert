@@ -60,7 +60,7 @@ class Film(val file: File, val parent: Film?) {
                 title = info.title
                 isComplete = info.is_completed
                 cover = if (info.ep != null) info.ep.cover else info.cover
-                name = if (info.ep != null) info.ep.index_title else info.page_data.part
+                name = (if (info.ep != null) info.ep.index_title else info.page_data.part).replace("/","")
                 index = if (info.ep != null) info.ep.index.toInt() else info.page_data.page
             }
             false -> {
