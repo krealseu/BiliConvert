@@ -69,6 +69,7 @@ class DetailAdapt(val dataManager: DataManager, var listener: OnItemClickListen?
                 dialog.setNegativeButton("Cancel",null)
                 dialog.setPositiveButton("Sure"){_, _ ->
                     File(dataManager.outputFolder, dataManager.createName(film)).delete()
+                    notifyItemChanged(position)
                 }
                 dialog.show()
                 true

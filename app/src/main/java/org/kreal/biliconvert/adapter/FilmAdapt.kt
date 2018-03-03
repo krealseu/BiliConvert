@@ -46,7 +46,7 @@ class FilmAdapt(private val dataManager: DataManager, var listener: OnItemClickL
             val film = dataManager.getFilm(position)
             if (dataManager.getState(film) == DataManager.State.Backup) {
                 val intent = Intent(Intent.ACTION_VIEW)
-                intent.setDataAndType( Uri.parse(File(dataManager.outputFolder, dataManager.createName(film)).path),"video/*")
+                intent.setDataAndType(Uri.parse(File(dataManager.outputFolder, dataManager.createName(film)).path), "video/*")
                 it.context.startActivity(intent)
             }
         }
@@ -57,13 +57,14 @@ class FilmAdapt(private val dataManager: DataManager, var listener: OnItemClickL
                 val dialog = AlertDialog.Builder(it.context)
                 dialog.setTitle("Delete")
                 dialog.setMessage(film.name)
-                dialog.setNegativeButton("Cancel",null)
-                dialog.setPositiveButton("Sure"){_, _ ->
+                dialog.setNegativeButton("Cancel", null)
+                dialog.setPositiveButton("Sure") { _, _ ->
                     File(dataManager.outputFolder, dataManager.createName(film)).delete()
+                    notifyItemChanged(position)
                 }
                 dialog.show()
                 true
-            }else false
+            } else false
         }
         return itemView
     }
