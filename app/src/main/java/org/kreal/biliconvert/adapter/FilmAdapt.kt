@@ -1,8 +1,12 @@
 package org.kreal.biliconvert.adapter
 
+import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +14,7 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import org.kreal.biliconvert.R
 import org.kreal.biliconvert.data.DataManager
+import java.io.File
 
 /**
  * Created by lthee on 2018/1/13.
@@ -36,6 +41,30 @@ class FilmAdapt(private val dataManager: DataManager, var listener: OnItemClickL
                 }
                 DataManager.State.Converting -> Toast.makeText(it.context, R.string.downloading, Toast.LENGTH_SHORT).show()
             }
+        }
+        itemView.header.setOnClickListener {
+            val position = itemView.adapterPosition
+            val film = dataManager.getFilm(position)
+            if (dataManager.getState(film) == DataManager.State.Backup) {
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType( Uri.parse(File(dataManager.outputFolder, dataManager.createName(film)).path),"video/*")
+                it.context.startActivity(intent)
+            }
+        }
+        itemView.header.setOnLongClickListener {
+            val position = itemView.adapterPosition
+            val film = dataManager.getFilm(position)
+            return@setOnLongClickListener if (dataManager.getState(film) == DataManager.State.Backup) {
+                val dialog = AlertDialog.Builder(it.context)
+                dialog.setTitle("Delete")
+                dialog.setMessage(film.name)
+                dialog.setNegativeButton("Cancel",null)
+                dialog.setPositiveButton("Sure"){_, _ ->
+                    File(dataManager.outputFolder, dataManager.createName(film)).delete()
+                }
+                dialog.show()
+                true
+            }else false
         }
         return itemView
     }
