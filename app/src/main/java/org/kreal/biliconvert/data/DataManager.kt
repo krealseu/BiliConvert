@@ -1,5 +1,6 @@
 package org.kreal.biliconvert.data
 
+import android.util.Log
 import org.kreal.biliconvert.convert.ConvertTask
 import java.io.File
 
@@ -36,9 +37,12 @@ class DataManager(biliSourceFolder: File, val outputFolder: File, private val co
     init {
         if (biliSourceFolder.isDirectory)
             biliSourceFolder.listFiles().forEach {
-                val film = Film(it)
-                if (film.isValid)
-                    films.add(film)
+                Log.i("ss",it.path)
+                if (it.isDirectory) {
+                    val film = Film(it)
+                    if (film.isValid)
+                        films.add(film)
+                }
             }
         filmSize = films.size
     }
