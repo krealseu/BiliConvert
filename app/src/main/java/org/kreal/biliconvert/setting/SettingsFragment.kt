@@ -39,7 +39,7 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
         customFolder = findPreference(SettingsKey.CustomFolder)
         outputFolder = findPreference(SettingsKey.OutputFolder)
         defaultFolder = findPreference(SettingsKey.IsDefault) as SwitchPreference
-        defaultFolder.setOnPreferenceChangeListener { preference, any ->
+        defaultFolder.setOnPreferenceChangeListener { _, any ->
             customFolder.isEnabled = any == false
             true
         }
