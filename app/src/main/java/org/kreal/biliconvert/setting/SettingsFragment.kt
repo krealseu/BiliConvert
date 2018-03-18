@@ -1,12 +1,15 @@
 package org.kreal.biliconvert.setting
 
+import android.os.Build
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
 import android.preference.SwitchPreference
+import android.widget.Toast
 import org.kreal.biliconvert.R
 import org.kreal.widget.filepickdialog.FilePickDialogFragment
+import java.io.File
 
 /**
  * Created by lthee on 2018/3/2.
@@ -23,8 +26,21 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
         FilePickDialogFragment().apply {
             selectFolder = true
             setListener {
-                preference.summary = it[0]
-                PreferenceManager.getDefaultSharedPreferences(preference.context).edit().putString(preference.key, it[0]).commit()
+                val path = it[0].path
+                when (preference.key) {
+                    SettingsKey.CustomFolder -> {
+                        preference.summary = path
+                        PreferenceManager.getDefaultSharedPreferences(preference.context).edit().putString(preference.key, path).apply()
+                    }
+                    SettingsKey.OutputFolder -> {
+                        if (File(path).canWrite()) {
+                            preference.summary = path
+                            PreferenceManager.getDefaultSharedPreferences(preference.context).edit().putString(preference.key, path).apply()
+                        } else {
+                            Toast.makeText(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) context else activity, "选择一个有写权限的目录", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }.show(fragmentManager, preference.key)
     }
