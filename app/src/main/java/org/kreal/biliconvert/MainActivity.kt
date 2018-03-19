@@ -1,10 +1,10 @@
 package org.kreal.biliconvert
 
+import android.app.LoaderManager
 import android.content.Intent
+import android.content.Loader
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
-import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
@@ -16,21 +16,36 @@ import org.kreal.biliconvert.convert.ConvertTask
 import org.kreal.biliconvert.convert.Tasks
 import org.kreal.biliconvert.data.DataManager
 import org.kreal.biliconvert.data.Film
+import org.kreal.biliconvert.loader.BiliSourceLoader
 import org.kreal.biliconvert.setting.SettingsActivity
-import org.kreal.biliconvert.setting.SettingsKey
-import java.io.File
 
-class MainActivity : AppCompatActivity(), Tasks.CallBack<Film>, OnItemClickListen {
+class MainActivity : AppCompatActivity(), Tasks.CallBack<Film>, OnItemClickListen, LoaderManager.LoaderCallbacks<DataManager> {
+
+    override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<DataManager> {
+        return BiliSourceLoader(baseContext)
+    }
+
+    override fun onLoadFinished(p0: Loader<DataManager>, dataManager: DataManager) {
+        this.dataManager = dataManager
+        this.convertTask = dataManager.convertTask
+        recycler_view.adapter = FilmAdapt(dataManager, this)
+    }
+
+    override fun onLoaderReset(p0: Loader<DataManager>?) {
+        recycler_view.adapter = null
+    }
+
     private lateinit var convertTask: ConvertTask
     private lateinit var dataManager: DataManager
     private val handler = Handler()
-    private var outputFolder: String = ""
-    private var biliSourceFolder: String = ""
+
+    private val loaderID: Int = 233
 
     override fun onClick(i: Int, film: Film) {
         when (dataManager.getState(film)) {
             DataManager.State.Waiting -> convertTask.remove(film)
             DataManager.State.Completed -> convertTask.submit(film, this)
+            else -> Unit
         }
     }
 
@@ -43,25 +58,8 @@ class MainActivity : AppCompatActivity(), Tasks.CallBack<Film>, OnItemClickListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val preference = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val outputFolderTmp = preference.getString(SettingsKey.OutputFolder, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path)
-        val biliSourceFolderTmp = if (preference.getBoolean(SettingsKey.IsDefault, true))
-            SettingsKey.DefaultFolder
-        else
-            PreferenceManager.getDefaultSharedPreferences(baseContext).getString(SettingsKey.CustomFolder, SettingsKey.DefaultFolder)
-        if (outputFolderTmp != outputFolder || biliSourceFolder != biliSourceFolderTmp) {
-            outputFolder = outputFolderTmp
-            biliSourceFolder = biliSourceFolderTmp
-            convertTask = ConvertTask(outputFolder)
-            dataManager = DataManager(File(biliSourceFolder, "${SettingsKey.biliName}/download"), File(outputFolder), convertTask)
-
-            recycler_view.adapter = FilmAdapt(dataManager, this)
-            recycler_view.layoutManager = LinearLayoutManager(baseContext)
-        }
+        recycler_view.layoutManager = LinearLayoutManager(baseContext)
+        loaderManager.initLoader(loaderID, null, this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

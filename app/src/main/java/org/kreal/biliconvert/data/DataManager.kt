@@ -8,7 +8,7 @@ import java.io.File
  * Created by lthee on 2018/1/27.
  * 类似system view的想法，还没整理好
  */
-class DataManager(biliSourceFolder: File, val outputFolder: File, private val convertTask: ConvertTask) {
+class DataManager(biliSourceFolder: File, val outputFolder: File, val convertTask: ConvertTask) {
 
     private val films: ArrayList<Film> = arrayListOf()
 
