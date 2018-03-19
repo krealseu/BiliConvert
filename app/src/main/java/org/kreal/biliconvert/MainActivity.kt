@@ -19,7 +19,14 @@ import org.kreal.biliconvert.data.Film
 import org.kreal.biliconvert.loader.BiliSourceLoader
 import org.kreal.biliconvert.setting.SettingsActivity
 
-class MainActivity : AppCompatActivity(), Tasks.CallBack<Film>, OnItemClickListen, LoaderManager.LoaderCallbacks<DataManager> {
+class MainActivity : AppCompatActivity(), Tasks.CallBack<Film>, OnItemClickListen, LoaderManager.LoaderCallbacks<DataManager>, StoragePermissionGrant.PermissionGrantListener {
+    override fun onReject() {
+        finish()
+    }
+
+    override fun onGrant() {
+        loaderManager.initLoader(loaderID, null, this)
+    }
 
     override fun onCreateLoader(p0: Int, p1: Bundle?): Loader<DataManager> {
         return BiliSourceLoader(baseContext)
@@ -59,7 +66,10 @@ class MainActivity : AppCompatActivity(), Tasks.CallBack<Film>, OnItemClickListe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recycler_view.layoutManager = LinearLayoutManager(baseContext)
-        loaderManager.initLoader(loaderID, null, this)
+        if (StoragePermissionGrant.checkPermissions(baseContext))
+            loaderManager.initLoader(loaderID, null, this)
+        else
+            StoragePermissionGrant().show(fragmentManager, "storage")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
