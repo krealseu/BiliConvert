@@ -11,14 +11,20 @@ class ConvertTask(private val outputFile: String) : Tasks<Film>() {
             when (task.isComplete && task.isSingle) {
                 false -> -1
                 true -> {
-                    val file = File("$outputFile/${createName(task)}")
+                    val name = createName(task)
+                    val file = File("$outputFile/$name.tmp")
                     if (file.exists() && file.isFile)
                         file.delete()
+                    val file2 = File("$outputFile/$name")
+                    if (file2.exists() && file2.isFile)
+                        file2.delete()
                     val sourcePath: Array<String> = Array(task.data.size) { task.data[it].path }
                     when (task.format) {
-                        "flv" -> FlvParserUtil.mergerFLV(sourcePath, "$outputFile/${createName(task)}")
-                        "mp4" -> Mp4ParserUtil.mergerMp4(sourcePath, "$outputFile/${createName(task)}")
+                        "flv" -> FlvParserUtil.mergerFLV(sourcePath, file.path)
+                        "mp4" -> Mp4ParserUtil.mergerMp4(sourcePath, file.path)
                     }
+                    if (file.exists() && file.isFile)
+                        file.renameTo(file2)
                     0
                 }
             }
