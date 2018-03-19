@@ -30,12 +30,12 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
                 when (preference.key) {
                     SettingsKey.CustomFolder -> {
                         preference.summary = path
-                        PreferenceManager.getDefaultSharedPreferences(preference.context).edit().putString(preference.key, path).apply()
+                        preference.sharedPreferences.edit().putString(preference.key, path).apply()
                     }
                     SettingsKey.OutputFolder -> {
                         if (File(path).canWrite()) {
                             preference.summary = path
-                            PreferenceManager.getDefaultSharedPreferences(preference.context).edit().putString(preference.key, path).apply()
+                            preference.sharedPreferences.edit().putString(preference.key, path).apply()
                         } else {
                             Toast.makeText(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) context else activity, "选择一个有写权限的目录", Toast.LENGTH_SHORT).show()
                         }
@@ -59,8 +59,8 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
             customFolder.isEnabled = any == false
             true
         }
-        customFolder.summary = PreferenceManager.getDefaultSharedPreferences(activity).getString(customFolder.key, SettingsKey.DefaultFolder)
-        outputFolder.summary = PreferenceManager.getDefaultSharedPreferences(activity).getString(outputFolder.key, SettingsKey.DefaultOutputFolder)
+        customFolder.summary = preferenceManager.sharedPreferences.getString(customFolder.key, SettingsKey.DefaultFolder)
+        outputFolder.summary = preferenceManager.sharedPreferences.getString(outputFolder.key, SettingsKey.DefaultOutputFolder)
         customFolder.isEnabled = !defaultFolder.isChecked
         customFolder.onPreferenceClickListener = this
         outputFolder.onPreferenceClickListener = this
