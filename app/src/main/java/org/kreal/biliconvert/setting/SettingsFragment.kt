@@ -59,8 +59,8 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
             customFolder.isEnabled = any == false
             true
         }
-        customFolder.summary = PreferenceManager.getDefaultSharedPreferences(activity).getString(customFolder.key, "/storage/emulated/0/android/data")
-        outputFolder.summary = PreferenceManager.getDefaultSharedPreferences(activity).getString(outputFolder.key, "/storage/emulated/0/download")
+        customFolder.summary = PreferenceManager.getDefaultSharedPreferences(activity).getString(customFolder.key, SettingsKey.DefaultFolder)
+        outputFolder.summary = PreferenceManager.getDefaultSharedPreferences(activity).getString(outputFolder.key, SettingsKey.DefaultOutputFolder)
         customFolder.isEnabled = !defaultFolder.isChecked
         customFolder.onPreferenceClickListener = this
         outputFolder.onPreferenceClickListener = this
