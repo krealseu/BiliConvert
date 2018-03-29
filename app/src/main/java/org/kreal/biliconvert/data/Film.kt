@@ -7,6 +7,7 @@ import java.util.*
 
 /**
  * Created by lthee on 2018/1/13.
+ * bili视频类（聚合）
  */
 class Film(val file: File, val parent: Film?) {
 
@@ -42,8 +43,8 @@ class Film(val file: File, val parent: Film?) {
                 isValid = true
                 isSingle = true
                 val info: BiliFilmInfo = Gson().fromJson(jsonFile.readText(), BiliFilmInfo::class.java)
-                val dataFileName: String = info.type_tag
-                val dataFile = File(file, (dataFileName ?: ""))
+                val dataFileName: String = info.type_tag ?: ""
+                val dataFile = File(file, dataFileName)
                 data = if (dataFile.isDirectory) {
                     val result = dataFile.listFiles { file ->
                         file.name.endsWith(".blv")
@@ -53,14 +54,11 @@ class Film(val file: File, val parent: Film?) {
                     }
                     result
                 } else arrayOf()
-                format = when (dataFileName == null) {
-                    true -> ""
-                    false -> if (dataFileName.contains("mp4")) "mp4" else if (dataFileName.contains("flv")) "flv" else ""
-                }
+                format = if (dataFileName.contains("mp4")) "mp4" else if (dataFileName.contains("flv")) "flv" else ""
                 title = info.title
                 isComplete = info.is_completed
                 cover = if (info.ep != null) info.ep.cover else info.cover
-                name = (if (info.ep != null) info.ep.index_title else info.page_data.part).replace("/","")
+                name = (if (info.ep != null) info.ep.index_title else info.page_data.part).replace("/", "")
                 index = if (info.ep != null) info.ep.index.toInt() else info.page_data.page
             }
             false -> {

@@ -7,6 +7,7 @@ import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
 import android.preference.SwitchPreference
 import android.widget.Toast
+import org.kreal.biliconvert.BuildConfig
 import org.kreal.biliconvert.R
 import org.kreal.widget.filepickdialog.FilePickDialogFragment
 import java.io.File
@@ -24,7 +25,7 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
 
     private fun bind2FilePickDialog(preference: Preference) {
         FilePickDialogFragment().apply {
-            selectFolder = true
+            type = FilePickDialogFragment.DIRECTORY_CHOOSE
             setListener {
                 val path = it[0].path
                 when (preference.key) {
@@ -64,6 +65,9 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceClickListe
         customFolder.isEnabled = !defaultFolder.isChecked
         customFolder.onPreferenceClickListener = this
         outputFolder.onPreferenceClickListener = this
+
+        findPreference("Version").summary = BuildConfig.VERSION_NAME
+
         setHasOptionsMenu(true)
     }
 }

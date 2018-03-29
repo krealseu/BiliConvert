@@ -7,9 +7,10 @@ class SettingsActivity : BaseSlideCloseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fragmentManager.beginTransaction()
-                .replace(android.R.id.content, SettingsFragment())
-                .commit()
+        if (fragmentManager.findFragmentById(android.R.id.content) == null)
+            fragmentManager.beginTransaction()
+                    .replace(android.R.id.content, SettingsFragment())
+                    .commit()
         setupActionBar()
     }
 

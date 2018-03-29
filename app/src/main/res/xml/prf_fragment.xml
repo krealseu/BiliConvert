@@ -19,8 +19,12 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="About">
         <Preference
+            android:key="Version"
+            android:summary="1.0.0"
+            android:title="Version" />
+        <Preference
             android:summary="lthee12@hotmail.com"
-            android:title="Email"/>
+            android:title="Email" />
         <Preference
             android:summary="https://github.com/krealseu/BiliConvert"
             android:title="Source code">

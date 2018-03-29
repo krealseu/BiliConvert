@@ -11,13 +11,23 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.Duration.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        def targetFile = new File(outputFile.parentFile, "BiliConvert-${defaultConfig.versionName}-release.apk")
+                        targetFile.delete()
+                        outputFile.renameTo(new File(outputFile.parentFile, "BiliConvert-${defaultConfig.versionName}-release.apk"))
+                    }
+                }
+            }
         }
     }
 }
@@ -25,14 +35,14 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.+'
-    implementation 'com.android.support:design:26.+'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
 //    implementation 'com.android.support.constraint:constraint-item_view:1.0.2'
     implementation 'com.github.bumptech.glide:glide:4.0.0-RC0'
     implementation 'com.github.krealseu:FLVParser:V1.0.0'
-    implementation 'com.github.krealseu.widget:filepickdialog:c36e0993d0'
-    implementation 'com.google.code.gson:gson:2.6.2'
+    implementation 'com.github.krealseu.widget:filepickdialog:v1.0.1'
+    implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.googlecode.mp4parser:isoparser:1.1.21'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
