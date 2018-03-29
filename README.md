@@ -1,6 +1,5 @@
 # BiliConvert
-Bili 下载视频，分段合并  
-  
+将BiliBili下载的分段视频文件合并，合成文件输出到用户指定文件夹
 ## Demo
 <table> 
 <tr>
@@ -11,9 +10,7 @@ Bili 下载视频，分段合并
 </table>
 
 ## Download
-<a href="app/release/BiliConvert-1.0.0-release.apk?raw=true" rel="nofollow">BiliConvert-1.0.0-release.apk</a><br/>
-<a href="app/release/BiliConvert-1.0.1-release.apk?raw=true" rel="nofollow">BiliConvert-1.0.1-release.apk</a><br/>
-
-## Version Log
-1.0.0 &nbsp; 初始版本 <br/>
-1.0.1 &nbsp; 修改导入库版本，设置界面添加Version <br/>
+Version | Log
+--- | ---
+[BiliConvert-1.0.0-release](app/release/BiliConvert-1.0.0-release.apk?raw=true) | 初始版本
+[BiliConvert-1.0.1-release](app/release/BiliConvert-1.0.1-release.apk?raw=true) | 修改导入库版本，设置界面添加Version
