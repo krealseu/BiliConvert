@@ -11,6 +11,7 @@ import java.util.*
  */
 class Film(val file: File, val parent: Film?) {
 
+    private val illegalChar = "[/*<>|?\"\\\\]".toRegex()
     val title: String
 
     val name: String
@@ -55,10 +56,10 @@ class Film(val file: File, val parent: Film?) {
                     result
                 } else arrayOf()
                 format = if (dataFileName.contains("mp4")) "mp4" else if (dataFileName.contains("flv")) "flv" else ""
-                title = info.title
+                title = info.title.replace(illegalChar, " ")
                 isComplete = info.is_completed
                 cover = if (info.ep != null) info.ep.cover else info.cover
-                name = (if (info.ep != null) info.ep.index_title else info.page_data.part).replace("/", "")
+                name = ((if (info.ep != null) info.ep.index_title else info.page_data.part)).replace(illegalChar, " ")
                 index = if (info.ep != null) info.ep.index.toInt() else info.page_data.page
             }
             false -> {
