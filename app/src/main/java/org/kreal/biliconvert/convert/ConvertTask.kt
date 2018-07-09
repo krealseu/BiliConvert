@@ -1,6 +1,6 @@
 package org.kreal.biliconvert.convert
 
-import org.kreal.biliconvert.data.Film
+import org.kreal.biliconvert.data.bili.Film
 import java.io.File
 
 /**
@@ -8,7 +8,7 @@ import java.io.File
  */
 class ConvertTask(private val outputFile: String) : Tasks<Film>() {
     override fun dealTask(task: Film): Int =
-            when (task.isComplete && task.isSingle) {
+            when (task.isComplete) {
                 false -> -1
                 true -> {
                     val name = createName(task)
@@ -29,14 +29,14 @@ class ConvertTask(private val outputFile: String) : Tasks<Film>() {
                 }
             }
 
-    override fun submit(task: Film, callBack: CallBack<Film>) {
+    override fun submit(task: Film, taskCallback: TaskCallback<Film>) {
         if (getState(task) == -1)
-            super.submit(task, callBack)
+            super.submit(task, taskCallback)
     }
 
     private fun createName(film: Film): String {
-        return if (film.parent == null)
+        return if (film.cover == null)
             film.title + "." + film.format
-        else "${film.index} ${film.name}.${film.format}"
+        else "${film.index} ${film.indexTitle}.${film.format}"
     }
 }

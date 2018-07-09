@@ -1,4 +1,4 @@
-package org.kreal.biliconvert.data.json
+package org.kreal.biliconvert.data.bili.json
 
 /**
  * Created by lthee on 2018/1/13.

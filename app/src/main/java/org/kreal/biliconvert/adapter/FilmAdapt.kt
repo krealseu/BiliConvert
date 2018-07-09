@@ -56,7 +56,7 @@ class FilmAdapt(private val dataManager: DataManager, var listener: OnItemClickL
             return@setOnLongClickListener if (dataManager.getState(film) == DataManager.State.Backup) {
                 val dialog = AlertDialog.Builder(it.context)
                 dialog.setTitle("Delete")
-                dialog.setMessage(film.name)
+                dialog.setMessage(film.indexTitle)
                 dialog.setNegativeButton("Cancel", null)
                 dialog.setPositiveButton("Sure") { _, _ ->
                     File(dataManager.outputFolder, dataManager.createName(film)).delete()
@@ -73,8 +73,8 @@ class FilmAdapt(private val dataManager: DataManager, var listener: OnItemClickL
         val film = dataManager.getFilm(position)
         holder.apply {
             Glide.with(coverImage).load(film.cover).into(coverImage)
-            if (!film.isSingle) {
-                filmName.text = film.name
+            if (!film.isComplete) {
+                filmName.text = film.indexTitle
                 chapterList.visibility = View.VISIBLE
                 adapt.listener = listener
                 adapt.swipeData(film)

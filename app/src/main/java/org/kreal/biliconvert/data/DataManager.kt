@@ -1,7 +1,7 @@
 package org.kreal.biliconvert.data
 
-import android.util.Log
 import org.kreal.biliconvert.convert.ConvertTask
+import org.kreal.biliconvert.data.bili.Film
 import java.io.File
 
 /**
@@ -29,20 +29,13 @@ class DataManager(biliSourceFolder: File, val outputFolder: File, val convertTas
             }
 
     fun createName(film: Film): String {
-        return if (film.parent == null)
+        return if (film.isComplete == null)
             film.title + "." + film.format
-        else "${film.index} ${film.name}.${film.format}"
+        else "${film.index} ${film.indexTitle}.${film.format}"
     }
 
     init {
-        if (biliSourceFolder.isDirectory)
-            biliSourceFolder.listFiles().forEach {
-                if (it.isDirectory) {
-                    val film = Film(it)
-                    if (film.isValid)
-                        films.add(film)
-                }
-            }
+
         filmSize = films.size
     }
 

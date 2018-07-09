@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue
  */
 abstract class Tasks<T> {
     private val taskQueue: LinkedBlockingQueue<T> = LinkedBlockingQueue()
-    private val callBackTable: Hashtable<T, CallBack<T>> = Hashtable()
+    private val taskCallbackTable: Hashtable<T, TaskCallback<T>> = Hashtable()
     private val service: ExecutorService = Executors.newSingleThreadExecutor()
     /**
      * true working ; false
@@ -20,26 +20,31 @@ abstract class Tasks<T> {
 
     private var workTask: T? = null
 
-    open fun submit(task: T, callBack: CallBack<T> = defaultCallBack) {
+    open fun submit(task: T, taskCallback: TaskCallback<T> = defaultTaskCallback) {
         taskQueue.put(task)
-        callBackTable[task] = callBack
+        taskCallbackTable[task] = taskCallback
         if (!serviceState)
             execute()
     }
 
+    /**
+     * 移除Task
+     */
     fun remove(task: T) =
             when (taskQueue.remove(task)) {
                 false -> false
                 true -> {
-                    callBackTable.remove(task)
+                    taskCallbackTable.remove(task)
                     true
                 }
             }
 
-
+    /**
+     * 清除剩下的Task队列
+     */
     fun clear() {
         taskQueue.clear()
-        callBackTable.clear()
+        taskCallbackTable.clear()
     }
 
     fun list() = taskQueue.toList()
@@ -54,32 +59,32 @@ abstract class Tasks<T> {
                 else -> if (taskQueue.contains(task)) 0 else -1
             }
 
-    abstract fun dealTask(task: T): Int
-
     /**
      * convert chapter
      */
     private fun execute() {
         service.submit {
             while (true) {
-                workTask = taskQueue.poll()
-                workTask?.also {
+                with(taskQueue.poll() ?: break) {
                     serviceState = true
-                    val callBack = callBackTable[it]
-                    callBack?.done(it, dealTask(it))
-                } ?: break
+                    val callBack = taskCallbackTable[this]
+                    callBack?.onTaskCompleted(this, dealTask(this))
+                    Unit
+                }
             }
             workTask = null
             serviceState = false
         }
     }
 
-    val defaultCallBack: CallBack<T> = object : CallBack<T> {
-        override fun done(task: T, result: Int) {
+    abstract fun dealTask(task: T): Int
+
+    private val defaultTaskCallback: TaskCallback<T> = object : TaskCallback<T> {
+        override fun onTaskCompleted(task: T, result: Int) {
         }
     }
 
-    interface CallBack<T> {
-        fun done(task: T, result: Int)
+    interface TaskCallback<in T> {
+        fun onTaskCompleted(task: T, result: Int)
     }
 }

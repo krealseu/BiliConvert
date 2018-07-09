@@ -5,8 +5,10 @@ import android.content.Intent
 import android.content.Loader
 import android.os.Bundle
 import android.os.Handler
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,11 +17,15 @@ import org.kreal.biliconvert.adapter.OnItemClickListen
 import org.kreal.biliconvert.convert.ConvertTask
 import org.kreal.biliconvert.convert.Tasks
 import org.kreal.biliconvert.data.DataManager
-import org.kreal.biliconvert.data.Film
+import org.kreal.biliconvert.data.bili.Film
+import org.kreal.biliconvert.data.bili.FilmDataLoaclSource
+import org.kreal.biliconvert.data.bili.FilmDataSource
 import org.kreal.biliconvert.loader.BiliSourceLoader
 import org.kreal.biliconvert.setting.SettingsActivity
+import org.kreal.biliconvert.setting.SettingsKey
+import java.io.File
 
-class MainActivity : AppCompatActivity(), Tasks.CallBack<Film>, OnItemClickListen, LoaderManager.LoaderCallbacks<DataManager>, StoragePermissionGrant.PermissionGrantListener {
+class MainActivity : AppCompatActivity(), Tasks.TaskCallback<Film>, OnItemClickListen, LoaderManager.LoaderCallbacks<DataManager>, StoragePermissionGrant.PermissionGrantListener {
     override fun onReject() {
         finish()
     }
@@ -56,7 +62,7 @@ class MainActivity : AppCompatActivity(), Tasks.CallBack<Film>, OnItemClickListe
         }
     }
 
-    override fun done(task: Film, result: Int) {
+    override fun onTaskCompleted(task: Film, result: Int) {
         handler.post {
             recycler_view.adapter.notifyDataSetChanged()
         }
@@ -70,6 +76,20 @@ class MainActivity : AppCompatActivity(), Tasks.CallBack<Film>, OnItemClickListe
             loaderManager.initLoader(loaderID, null, this)
         else
             StoragePermissionGrant().show(fragmentManager, "storage")
+        val filmDataSource: FilmDataLoaclSource = FilmDataLoaclSource(File(if (PreferenceManager.getDefaultSharedPreferences(baseContext).getBoolean(SettingsKey.IsDefault, true)) SettingsKey.DefaultFolder else PreferenceManager.getDefaultSharedPreferences(baseContext).getString(SettingsKey.CustomFolder, SettingsKey.DefaultFolder), "${SettingsKey.biliName}/download"))
+        filmDataSource.loadFilms(object : FilmDataSource.LoadFilmsCallback {
+            override fun onFilmsLoaded(films: Array<Film>) {
+                films.forEach {
+                    Log.i("asd",it.title)
+                }
+            }
+
+            override fun onDataNotAvailable() {
+            }
+
+        })
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
